@@ -3,17 +3,24 @@
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\File\File;
+use Monolog\Logger,
+    Monolog\Handler\StreamHandler;
 use Mendeley\Library;
 
 class AppKernel
 {
     protected $twig;
 
+    protected $logger;
+
     public function __construct()
     {
         $loader = new \Twig_Loader_Filesystem(dirname(__FILE__) . '/../app/views');
         $this->twig = new \Twig_Environment($loader);
         $this->twig->addExtension(new \Twig_Extension_Core());
+
+        $this->logger = new Logger('app');
+        $this->logger->pushHandler(new StreamHandler(dirname(__FILE__) . '/../app/mendeley.log'));
     }
 
     public function handle(Request $request)
@@ -25,7 +32,9 @@ class AppKernel
                 if (null !== $uploadedFile = $request->files->get('library')) {
                     /** @var $uploadedFile \Symfony\Component\HttpFoundation\File\UploadedFile */
                     if ($uploadedFile->isValid()) {
-                        $libraryFile = $uploadedFile->move('/tmp', uniqid('mendeley'));
+                        $filename = uniqid('mendeley');
+                        $this->logger->debug('Moving uploaded file.', array('dir' => '/tmp', 'file' => $filename));
+                        $libraryFile = $uploadedFile->move('/tmp', $filename);
                         $library = $this->convertLibrary($libraryFile);
                         $response = $this->createFileResponse($library->getRecords());
                         @unlink($libraryFile->getPath());

@@ -33,17 +33,16 @@ class AppKernel
                     /** @var $uploadedFile \Symfony\Component\HttpFoundation\File\UploadedFile */
                     if ($uploadedFile->isValid()) {
                         $filename = uniqid('mendeley');
-                        $this->logger->debug('Moving uploaded file.', array('dir' => '/tmp', 'file' => $filename));
                         $libraryFile = $uploadedFile->move('/tmp', $filename);
                         $library = $this->convertLibrary($libraryFile);
                         $response = $this->createFileResponse($library->getRecords());
-                        @unlink($libraryFile->getPath());
+                        @unlink($libraryFile->getPathname());
                     }
                 }
             }
             catch (Exception $e) {
                 $content = $this->twig->render('base.html.twig', array(
-                    'message' => $e->getMessage(),
+                    'message' => get_class($e).': '.$e->getMessage(),
                     'message_type' => 'error',
                     'trace' => debug_backtrace()
                 ));
@@ -61,7 +60,7 @@ class AppKernel
 
     protected function convertLibrary(File $file)
     {
-        return Library::createFromFile($file->getPath());
+        return Library::createFromFile($file->getPathname());
     }
 
     protected function createFileResponse(array $rows = array())

@@ -71,11 +71,8 @@ class AppKernel
         ));
 
         $response = new Response($content);
-        $response->setPublic();
-        $response->headers->addCacheControlDirective('must-revalidate');
-        $response->headers->set('Content-Type', 'text/plain', true);
-        $response->headers->set('Content-Length', strlen($content), true);
-        $response->headers->set('Content-Disposition', 'attachment, filename="library.csv"');
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="library.csv"');
 
         return $response;
     }

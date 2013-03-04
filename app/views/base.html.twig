@@ -9,7 +9,6 @@
     <meta name="author" content="">
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/box.css" rel="stylesheet">
     <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
 
     <!--[if lt IE 9]>
@@ -28,13 +27,16 @@
     {% if trace is defined %}
     <div class="row">
         <div class="span12">
-            <ol class="well">
-                {% for frame in trace %}
-                    <li>Call to <strong>{{ frame.function }}</strong> in <strong>{{ frame.file }}</strong>:<strong>{{ frame.line }}</strong></li>
-                {% else %}
-                    <li>No backtrace available.</li>
-                {% endfor %}
-            </ol>
+            <h3>Trace:</h3>
+            <div class="well">
+                <ol>
+                    {% for frame in trace %}
+                        <li>Call to <strong>{{ frame.function }}</strong> in <strong>{{ frame.file }}</strong>:<strong>{{ frame.line }}</strong></li>
+                    {% else %}
+                        <li>No backtrace available.</li>
+                    {% endfor %}
+                </ol>
+            </div>
         </div>
     </div>
     {% endif %}

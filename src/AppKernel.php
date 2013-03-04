@@ -2,7 +2,7 @@
 
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\HttpFoundation\File\UploadedFile;
+    Symfony\Component\HttpFoundation\File\File;
 use Mendeley\Library;
 
 class AppKernel
@@ -22,10 +22,13 @@ class AppKernel
 
         if ($request->isMethod('post')) {
             try {
-                if (null !== $libraryFile = $request->files->get('library')) {
-                    if ($libraryFile->isValid()) {
+                if (null !== $uploadedFile = $request->files->get('library')) {
+                    /** @var $uploadedFile \Symfony\Component\HttpFoundation\File\UploadedFile */
+                    if ($uploadedFile->isValid()) {
+                        $libraryFile = $uploadedFile->move('/tmp', uniqid('mendeley'));
                         $library = $this->convertLibrary($libraryFile);
                         $response = $this->createFileResponse($library->getRecords());
+                        @unlink($libraryFile->getPath());
                     }
                 }
             }
@@ -47,7 +50,7 @@ class AppKernel
         return $response->prepare($request);
     }
 
-    protected function convertLibrary(UploadedFile $file)
+    protected function convertLibrary(File $file)
     {
         return Library::createFromFile($file->getPath());
     }

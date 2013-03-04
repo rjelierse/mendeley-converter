@@ -31,7 +31,7 @@
             <div class="well">
                 <ol>
                     {% for frame in trace %}
-                        <li>Call to <strong>{{ frame.function }}</strong> in <strong>{{ frame.file }}</strong>:<strong>{{ frame.line }}</strong></li>
+                        <li>Call to <strong>{{ frame.function }}</strong> in <strong>{{ frame.file }}</strong> on line <strong>{{ frame.line }}</strong></li>
                     {% else %}
                         <li>No backtrace available.</li>
                     {% endfor %}

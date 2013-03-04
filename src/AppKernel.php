@@ -13,6 +13,7 @@ class AppKernel
     {
         $loader = new \Twig_Loader_Filesystem(dirname(__FILE__) . '/../app/views');
         $this->twig = new \Twig_Environment($loader);
+        $this->twig->addExtension(new \Twig_Extension_Core());
     }
 
     public function handle(Request $request)

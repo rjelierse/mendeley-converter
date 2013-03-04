@@ -1,0 +1,9 @@
+{
+    "require": {
+        "symfony/http-foundation": "2.2.*@dev",
+        "twig/twig": "<2.0"
+    },
+    "autoload": {
+        "psr-0": {"": "src/"}
+    }
+}

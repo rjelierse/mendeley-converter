@@ -31,7 +31,6 @@ class Library
     public function loadFile($path)
     {
         $useInternalErrors = libxml_use_internal_errors(true);
-        $disableEntities = libxml_disable_entity_loader(true);
         libxml_clear_errors();
 
         $dom = new \DOMDocument();
@@ -42,7 +41,6 @@ class Library
         $dom->normalizeDocument();
 
         libxml_use_internal_errors($useInternalErrors);
-        libxml_disable_entity_loader($disableEntities);
 
         foreach ($dom->childNodes as $node) {
             if (XML_DOCUMENT_TYPE_NODE === $node->nodeType) {
